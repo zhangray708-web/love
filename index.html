@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>🍬 恋爱六边形 · 马卡龙测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #fff9f7;
+            font-family: 'Segoe UI', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            padding: 20px 16px 40px;
+            color: #5e4b5c;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
+            border-radius: 48px 48px 36px 36px;
+            box-shadow: 0 20px 40px rgba(239, 184, 196, 0.25);
+            padding: 30px 20px 40px;
+            border: 2px solid #ffe2e0;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #c4848f;
+            text-align: center;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        h1 span {
+            background: #ffddd7;
+            padding: 6px 20px;
+            border-radius: 60px;
+            font-size: 1rem;
+            color: #a5646e;
+            font-weight: 400;
+        }
+        .sub {
+            text-align: center;
+            color: #b28b9c;
+            background: #fff2ea;
+            padding: 14px 20px;
+            border-radius: 40px;
+            margin: 10px 0 25px;
+            font-size: 1.1rem;
+            border: 1px dashed #fbb9c2;
+            box-shadow: 0 4px 8px #fde1e1;
+        }
+        .notice {
+            background: #e2f2e5;
+            border-radius: 28px;
+            padding: 14px 20px;
+            color: #4e6b5c;
+            margin: 20px 0 15px;
+            font-size: 0.95rem;
+            border: 2px solid #b9dfc9;
+        }
+        .dimension {
+            background: #ffffffcf;
+            border-radius: 32px;
+            padding: 20px 16px 10px;
+            margin: 28px 0 20px;
+            box-shadow: 0 6px 0 #ffcfcf;
+            border: 1px solid #ffb9bf;
+        }
+        .dimension h2 {
+            font-size: 1.6rem;
+            margin-left: 8px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b25f6e;
+        }
+        .dimension-icon {
+            font-size: 2rem;
+        }
+        .question {
+            background: #fffbfb;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin: 18px 0;
+            border: 2px solid #ffe3d6;
+            transition: 0.1s;
+        }
+        .question p {
+            font-weight: 550;
+            margin-bottom: 10px;
+            color: #614158;
+            font-size: 1.08rem;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f7f0f0;
+            padding: 8px 18px;
+            border-radius: 60px;
+            border: 1px solid #fbc3c3;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.98rem;
+        }
+        .option.selected {
+            background: #ffd3d3;
+            border-color: #ec9191;
+            box-shadow: 0 0 0 2px #ffa5b0;
+        }
+        .option input {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #c4717a;
+            border-radius: 50%;
+            margin-right: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        .option input:checked {
+            background: #d96f7b;
+            border-color: #d96f7b;
+            box-shadow: inset 0 0 0 4px #fff;
+        }
+        .score-tag {
+            font-size: 0.8rem;
+            color: #b4838a;
+            margin-left: 4px;
+        }
+        .btn {
+            background: #ffb6c1;
+            border: none;
+            color: #5c3842;
+            font-weight: 600;
+            font-size: 1.6rem;
+            padding: 20px 30px;
+            border-radius: 60px;
+            width: 100%;
+            max-width: 360px;
+            margin: 20px auto 30px;
+            display: block;
+            text-align: center;
+            box-shadow: 0 10px 0 #b27d86, 0 6px 20px #fccaca;
+            transition: 0.05s linear;
+            cursor: pointer;
+            border: 2px solid #ffe3ec;
+            letter-spacing: 2px;
+        }
+        .btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #b27d86;
+        }
+        .result-area {
+            background: #fef2f5;
+            border-radius: 48px 48px 32px 32px;
+            padding: 30px 18px 30px;
+            margin-top: 30px;
+            border: 3px solid #ffe1d5;
+            display: none;
+        }
+        .radar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 0;
+        }
+        canvas {
+            width: 280px;
+            height: 280px;
+            background: #fff2f7;
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow: 0 8px 0 #e7b2b2;
+        }
+        .score-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 25px;
+            margin: 30px 0 10px;
+        }
+        .score-item {
+            background: #ffffff;
+            border-radius: 60px;
+            padding: 12px 28px;
+            font-size: 1.2rem;
+            border: 2px solid #ffbeba;
+            box-shadow: 0 4px 0 #efb2b2;
+            min-width: 150px;
+            text-align: center;
+        }
+        .score-item b {
+            color: #b63e55;
+            font-size: 1.6rem;
+            margin-left: 6px;
+        }
+        .suggestion-box {
+            background: #fffcf0;
+            border-radius: 36px;
+            padding: 24px 18px;
+            margin-top: 30px;
+            border: 3px solid #ffe0b5;
+        }
+        .suggestion-box h3 {
+            font-size: 1.9rem;
+            color: #bd7474;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        .dimension-suggest {
+            background: #f5f0ff;
+            border-radius: 24px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 12px solid #d9b8c4;
+        }
+        .badge {
+            display: inline-block;
+            background: #ffb7b7;
+            color: #582b36;
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        .type-tag {
+            background: #c7e1c7;
+            border-radius: 60px;
+            padding: 14px 24px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #31513b;
+        }
+        footer {
+            text-align: center;
+            color: #cda3ae;
+            margin-top: 20px;
+        }
+        hr {
+            border: 2px solid #ffd8d8;
+            margin: 30px 0 10px;
+            border-radius: 10px;
+        }
+        .mark {
+            background: #ffe0aa;
+            padding: 3px 10px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        🍰 恋爱六边形
+        <span>为啥一直单身？</span>
+    </h1>
+    <div class="sub">
+        ⏳ 再不恋爱，好像真的要一辈子单身了…<br>
+        18题画出你的恋爱雷达，超准！
+    </div>
+    <!-- 题目区块 -->
+    <div id="questions-area"></div>
+
+    <button class="btn" id="submitBtn">✨ 查看我的六边形 ✨</button>
+
+    <!-- 结果展示区（初始隐藏） -->
+    <div class="result-area" id="resultArea">
+        <div class="radar-container">
+            <canvas id="radarCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="score-row" id="scoreRow"></div>
+
+        <div class="suggestion-box" id="suggestionBox">
+            <h3>💌 脱单处方</h3>
+            <div id="dimensionSuggestions"></div>
+            <div id="typeDiagnosis" class="type-tag" style="margin-top:20px;"></div>
+        </div>
+        <hr>
+        <div style="font-size:0.9rem; color:#a37681;">💕 你的短板就是变好的方向～</div>
+    </div>
+    <footer>⚡ 马卡龙色系 · 小红书爆款测试</footer>
+</div>
+
+<script>
+    (function() {
+        // ----- 题目数据 (维度索引 0~5) -----
+        const questions = [
+            // 维度0: 社交开放性
+            { text: "1. 我愿意去新场合认识陌生人", dim: 0 },
+            { text: "2. 有人给我介绍对象我不排斥", dim: 0 },
+            { text: "3. 我不抗拒加好感对象的联系方式", dim: 0 },
+            // 维度1: 主动勇气
+            { text: "4. 遇到喜欢的人我会主动聊天", dim: 1 },
+            { text: "5. 我敢主动约人出来见面", dim: 1 },
+            { text: "6. 就算怕被拒，我也敢表达好感", dim: 1 },
+            // 维度2: 亲密接纳度
+            { text: "7. 我能接受依赖别人，也接受被依赖", dim: 2 },
+            { text: "8. 我不排斥牵手、拥抱这类亲密行为", dim: 2 },
+            { text: "9. 我愿意对另一半坦诚脆弱", dim: 2 },
+            // 维度3: 择偶现实感
+            { text: "10. 我不会非要找“完美理想型”", dim: 3 },
+            { text: "11. 我能接受对方有小缺点", dim: 3 },
+            { text: "12. 我更看重人品性格，不是表面条件", dim: 3 },
+            // 维度4: 情绪安全感
+            { text: "13. 我相信自己是值得被爱的", dim: 4 },
+            { text: "14. 单身久了我不会觉得自己没人要", dim: 4 },
+            { text: "15. 被拒绝我也不会否定自己", dim: 4 },
+            // 维度5: 恋爱经营力
+            { text: "16. 吵架我不会一直冷战", dim: 5 },
+            { text: "17. 我愿意好好沟通，不冷暴力", dim: 5 },
+            { text: "18. 我会为一段感情花心思经营", dim: 5 }
+        ];
+
+        // 维度中文名、图标、颜色 (马卡龙色)
+        const dimMeta = [
+            { name: "社交开放性", icon: "💬", color: "#FFB7B2" },  // 淡粉
+            { name: "主动勇气", icon: "💪", color: "#FEC8D8" },    // 浅粉红
+            { name: "亲密接纳度", icon: "🌸", color: "#D4A5A5" },  // 玫瑰粽
+            { name: "择偶现实感", icon: "🎯", color: "#B5E4CA" },  // 薄荷
+            { name: "情绪安全感", icon: "🛡️", color: "#C5A3FF" },  // 淡紫
+            { name: "恋爱经营力", icon: "💞", color: "#FFE3B7" }   // 奶油
+        ];
+
+        // 评分映射: 选项值 A->3, B->2, C->1, D->0
+        function getScoreFromOption(value) {
+            switch(value) {
+                case 'A': return 3;
+                case 'B': return 2;
+                case 'C': return 1;
+                case 'D': return 0;
+                default: return 0;
+            }
+        }
+
+        // 存储每个题当前选择的选项值 (A/B/C/D) , 初始为空字符串
+        let answers = new Array(18).fill('');
+
+        // 渲染所有题目
+        function renderQuestions() {
+            const container = document.getElementById('questions-area');
+            let html = '';
+            for (let d = 0; d < 6; d++) {
+                html += `<div class="dimension">`;
+                html += `<h2><span class="dimension-icon">${dimMeta[d].icon}</span> ${dimMeta[d].name}</h2>`;
+
+                // 找出属于该维度的3道题
+                for (let i = 0; i < questions.length; i++) {
+                    if (questions[i].dim === d) {
+                        const q = questions[i];
+                        const idx = i; // 题号索引 0-17
+                        const saved = answers[idx] || '';
+                        html += `<div class="question" data-qidx="${idx}">`;
+                        html += `<p>${q.text}</p>`;
+                        html += `<div class="options">`;
+                        // 四个选项 A B C D
+                        ['A','B','C','D'].forEach(opt => {
+                            const selected = (saved === opt) ? 'selected' : '';
+                            html += `<label class="option ${selected}" data-opt="${opt}">`;
+                            html += `<input type="radio" name="q${idx}" value="${opt}" ${saved === opt ? 'checked' : ''}>`;
+                            if (opt === 'A') html += `很符合 <span class="score-tag">3分</span>`;
+                            else if (opt === 'B') html += `一般 <span class="score-tag">2分</span>`;
+                            else if (opt === 'C') html += `不符合 <span class="score-tag">1分</span>`;
+                            else if (opt === 'D') html += `完全不符 <span class="score-tag">0分</span>`;
+                            html += `</label>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                }
+                html += `</div>`; // 结束dimension
+            }
+            container.innerHTML = html;
+
+            // 为所有radio添加变更事件
+            document.querySelectorAll('.question').forEach(qDiv => {
+                const radios = qDiv.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', function(e) {
+                        const qIdx = this.name.substring(1); // 从"q0"取出0
+                        const questionIndex = parseInt(qIdx);
+                        if (!isNaN(questionIndex)) {
+                            answers[questionIndex] = this.value;
+                        }
+                        // 更新选中样式
+                        const parentOption = this.closest('.option');
+                        const options = parentOption.parentElement.querySelectorAll('.option');
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        parentOption.classList.add('selected');
+                    });
+                });
+            });
+        }
+
+        // 计算六个维度的总分(0-9)
+        function computeScores() {
+            let dimScores = [0,0,0,0,0,0];
+            for (let i = 0; i < answers.length; i++) {
+                const ans = answers[i];
+                if (ans === '') continue; // 没选就当0分? 但应该提示全选。我们先按0处理, 但会警告。
+                const score = getScoreFromOption(ans);
+                const dim = questions[i].dim;
+                dimScores[dim] += score;
+            }
+            return dimScores;
+        }
+
+        // 检查是否所有题都选了
+        function allAnswered() {
+            for (let i = 0; i < answers.length; i++) {
+                if (answers[i] === '') return false;
+            }
+            return true;
+        }
+
+        // 绘制雷达图 (六边形)
+        function drawRadar(scores) {
+            const canvas = document.getElementById('radarCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = 400, h = 400;
+            ctx.clearRect(0, 0, w, h);
+            
+            const centerX = 200, centerY = 200;
+            const radius = 130; // 六边形半径
+
+            // 六个顶点方向 (从最上方开始顺时针)
+            const angles = [];
+            for (let i = 0; i < 6; i++) {
+                // 从 -90° (正上方) 开始，使得第一个点在顶部
+                angles.push( ( -90 + i * 60 ) * Math.PI / 180 );
+            }
+
+            // 画背景六边形网格 (5层)
+            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = '#eec9cf';
+            ctx.fillStyle = '#fef2f7';
+            ctx.fill();
+            for (let level = 1; level <= 5; level++) {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    let r = (radius * level) / 5;
+                    let x = centerX + r * Math.cos(angles[i]);
+                    let y = centerY + r * Math.sin(angles[i]);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = '#f5ced4';
+                ctx.stroke();
+            }
+            // 画对角线
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + radius * Math.cos(angles[i]), centerY + radius * Math.sin(angles[i]));
+            }
+            ctx.strokeStyle = '#fad2d9';
+            ctx.stroke();
+
+            // 绘制数据多边形
+            const maxScore = 9; // 每个维度满分9分
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                let score = scores[i];
+                if (score < 0) score = 0;
+                if (score > 9) score = 9;
+                let r = (score / maxScore) * radius;
+                let x = centerX + r * Math.cos(angles[i]);
+                let y = centerY + r * Math.sin(angles[i]);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = '#ffb3b3b3'; // 半透明马卡龙红
+            ctx.fillStyle = '#FFC8D3CC';
+            ctx.fill();
+            ctx.strokeStyle = '#D3656B';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // 在顶点画小圆点
+            for (let i = 0; i < 6; i++) {
+                let score = scores[i];
+                let r = (score / maxScore) * radius;
+                let x = centerX + r * Math.cos(angles[i]);
+                let y = centerY + r * Math.sin(angles[i]);
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, 2*Math.PI);
+                ctx.fillStyle = '#Ff7b89';
+                ctx.shadowColor = '#bc7a7a';
+                ctx.shadowBlur = 6;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            // 写维度标签
+            ctx.font = 'bold 18px "Segoe UI", "PingFang SC", sans-serif';
+            ctx.fillStyle = '#855a66';
+            ctx.shadowBlur = 0;
+            const labels = ['社交', '主动', '亲密', '择偶', '情绪', '经营'];
+            for (let i = 0; i < 6; i++) {
+                let x = centerX + (radius + 24) * Math.cos(angles[i]);
+                let y = centerY + (radius + 24) * Math.sin(angles[i]);
+                ctx.fillStyle = '#a36272';
+                ctx.font = 'bold 16px "Segoe UI", "PingFang SC"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labels[i], x, y);
+            }
+        }
+
+        // 生成分数和建议HTML
+        function renderResults(scores) {
+            // 分数行
+            const scoreRow = document.getElementById('scoreRow');
+            let scoreHtml = '';
+            for (let i = 0; i < 6; i++) {
+                scoreHtml += `<div class="score-item" style="background:${dimMeta[i].color}40; border-color:${dimMeta[i].color}">
+                    ${dimMeta[i].icon} ${dimMeta[i].name} <b>${scores[i]}</b>
+                </div>`;
+            }
+            scoreRow.innerHTML = scoreHtml;
+
+            // 各维度建议
+            const suggDiv = document.getElementById('dimensionSuggestions');
+            let suggHtml = '';
+            for (let i = 0; i < 6; i++) {
+                const score = scores[i];
+                let levelText = score <= 3 ? '严重短板' : (score <= 6 ? '普通水平' : '天赋型');
+                let advice = '';
+                if (score <= 3) {
+                    const lowAdvice = [
+                        '你有点社恐，总待在自己的小圈子里。从兴趣社团、朋友聚会开始，每周尝试一次新场合。马卡龙色穿搭更显亲和～',
+                        '你总在等待对方主动，容易错过缘分。下次试着发一句“今天过得怎么样？”每月主动联系一位新朋友。',
+                        '你对亲密关系有点恐惧，害怕依赖或被依赖。从养宠物或与家人多拥抱开始，练习肢体接触。',
+                        '你太追求完美，容易错过合适的人。列出最看重的3个核心品质，其他放宽，试着和不同类型的人聊天。',
+                        '你容易自我怀疑，总觉得自己不够好。每天对自己说一句“我值得被爱”，记录优点。',
+                        '你可能不太擅长处理矛盾，容易冷战。学习非暴力沟通，吵架时先深呼吸10秒。'
+                    ];
+                    advice = lowAdvice[i];
+                } else if (score <= 6) {
+                    advice = '处于中等水平，稍微提升会更棒～ ' + (i === 0 ? '可以多参加小型社交。' : i === 1 ? '偶尔主动一点会有惊喜。' : i === 2 ? '试着多打开心扉。' : i === 3 ? '保持弹性，继续放宽。' : i === 4 ? '多给自己肯定。' : '学习一点沟通技巧。');
+                } else {
+                    advice = '天赋选手！保持优势，你是人群中的小太阳～';
+                }
+                suggHtml += `<div class="dimension-suggest" style="border-left-color:${dimMeta[i].color}">
+                    <span class="badge" style="background:${dimMeta[i].color}">${dimMeta[i].name} ${levelText}</span>
+                    <span>${advice}</span>
+                </div>`;
+            }
+            suggDiv.innerHTML = suggHtml;
+
+            // 综合类型诊断：找出最高分和最低分维度
+            let maxScore = Math.max(...scores);
+            let minScore = Math.min(...scores);
+            let maxDimIndex = scores.indexOf(maxScore);
+            let minDimIndex = scores.indexOf(minScore);
+            let maxName = dimMeta[maxDimIndex].name;
+            let minName = dimMeta[minDimIndex].name;
+
+            let typeDesc = '';
+            if (scores.every(s => s >= 7)) typeDesc = '🎉 六边形战士：你就是恋爱天花板！保持优势，主动出击，很快会遇到旗鼓相当的人。';
+            else if (maxScore >= 7 && minScore <= 3) typeDesc = `✨ 反差魅力：最强是「${maxName}」，最弱是「${minName}」。强化短板，你会更闪耀。`;
+            else if (maxScore >= 7) typeDesc = `🌟 你的王牌是「${maxName}」，多发挥这个优势，同时留意一下弱项「${minName}」。`;
+            else if (maxScore <= 3) typeDesc = '🌱 小白花型：每个维度都有成长空间，从小事开始改变，恋爱会慢慢靠近。';
+            else typeDesc = `🍬 均衡型：没有明显瘸腿，综合分不错～可以针对「${minName}」再努力一下。`;
+
+            document.getElementById('typeDiagnosis').innerHTML = `🧁 综合类型 · ${typeDesc}`;
+        }
+
+        // 点击按钮
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            if (!allAnswered()) {
+                alert('💡 还有题目没选完哦～ 戳一戳就能完成！');
+                return;
+            }
+            const scores = computeScores();
+            // 显示结果区域
+            const resultArea = document.getElementById('resultArea');
+            resultArea.style.display = 'block';
+            drawRadar(scores);
+            renderResults(scores);
+
+            // 滚动到结果
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // 初始化
+        renderQuestions();
+    })();
+</script>
+</body>
+</html>
